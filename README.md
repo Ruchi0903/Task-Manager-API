@@ -10,26 +10,26 @@ Status till 6th June 2025, 23:45pm ->
 
 # Models (Data Layer):
 1. userModel.js:
-    a. Fields: name, email, password
-    b. Password hashing with bcryptjs
-    c. matchPassword() method for login
+a. Fields: name, email, password
+b. Password hashing with bcryptjs
+c. matchPassword() method for login
 2. taskModel.js:
-    a. Fields: title, description, completed, user
-    b. user is a foreign key via mongoose.Schema.Types.ObjectId
+a. Fields: title, description, completed, user
+b. user is a foreign key via mongoose.Schema.Types.ObjectId
 
 # Core Features Built:
 1. Auth System (JWT based):
-    a. registerUser: POST /api/auth/register
-    b. loginUser: POST /api/auth/login
-    c. generateToken.js: signs JWT
-    d. Password hashing & comparison handled
-    e. Token returned on successful login/registration
-    f. Get the profile of logged-in user: GET /api/auth/me
+a. registerUser: POST /api/auth/register
+b. loginUser: POST /api/auth/login
+c. generateToken.js: signs JWT
+d. Password hashing & comparison handled
+e. Token returned on successful login/registration
+f. Get the profile of logged-in user: GET /api/auth/me
 
 2. Auth Routes
-    a. POST /api/auth/register
-    b. POST /api/auth/login
-    c. GET /api/auth/me
+a. POST /api/auth/register
+b. POST /api/auth/login
+c. GET /api/auth/me
 
 # Authorization Middleare
 1. authMiddleware.js created
