@@ -38,8 +38,8 @@ c. GET /api/auth/me
 4. All /api/tasks routes are now protected
 
 # Task CRUD Features:
-1. createTask: create tasks
-2. getTasks: get user's tasks
-3. updateTask: update task (by owner only)
-4. deleteTask: delete task (by owner only)
+1. createTask: create tasks (by logged-in user only) -> /api/tasks/createTask
+2. getTasks: get user's tasks (by logged-in user only) -> /api/tasks/getTasks
+3. updateTask: update task (by logged-in user only) -> /api/tasks/:id
+4. deleteTask: delete task (by logged-in user only) -> /api/tasks/:id
 5. All task routes are protected via JWT.
