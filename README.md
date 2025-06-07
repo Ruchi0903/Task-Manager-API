@@ -25,11 +25,15 @@ c. generateToken.js: signs JWT
 d. Password hashing & comparison handled
 e. Token returned on successful login/registration
 f. Get the profile of logged-in user: GET /api/auth/me
+g. Delete the account of a logged-in user along with his/her tasks: DELETE /api/auth/delete
+
+(Optional) “Future feature: soft delete with account reactivation option”
 
 2. Auth Routes
 a. POST /api/auth/register
 b. POST /api/auth/login
 c. GET /api/auth/me
+d. DELETE /api/auth/delete
 
 # Authorization Middleare
 1. authMiddleware.js created

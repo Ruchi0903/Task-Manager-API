@@ -1,6 +1,7 @@
 import User from '../models/userModel.js';
+import Task from '../models/taskModel.js';
 import generateToken from '../utils/generateToken.js';
-import { registerSchema, loginSchema } from '../validators/authValidation.js';
+import { registerSchema, loginSchema, deleteUserSchema } from '../validators/authValidation.js';
 
 // REGISTER
 export const registerUser = async (req, res, next) => {
@@ -67,9 +68,41 @@ export const getMe = async (req, res, next) => {
             email: user.email,
             // add more fields if needed
         });
-    } catch (error) {
+    } catch (err) {
         next(err);
         // console.error('Error fetching user profile:', error);
         // res.status(500).json({ message: 'Server error' });
     }
 };
+
+export const deleteUser = async (req, res, next) => {
+    try {
+        const { error } = deleteUserSchema.validate(req.body);
+        if (error) {
+            return res.status(400).json({ message: error.details[0].message });
+        }
+
+        const { password } = req.body;
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Re-authenticate with password
+        const isMatch = await user.matchPassword(password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Incorrect Password' });
+        }
+
+        // Delete all tasks by this user
+        await Task.deleteMany({ user: req.user._id });
+
+        // Delete user
+        await User.deleteOne();
+
+        res.status(200).json({ message: 'Your account and tasks have been deleted' })
+    } catch (err) {
+        next(err);
+    }
+}

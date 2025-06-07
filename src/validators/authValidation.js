@@ -25,3 +25,9 @@ export const loginSchema = Joi.object({
         'any.required': 'Password is required',
     }),
 });
+
+export const deleteUserSchema = Joi.object({
+    password: Joi.string().required().messages({
+        'string.empty': 'Password is required to delete your account',
+    }),
+});
