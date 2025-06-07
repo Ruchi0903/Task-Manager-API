@@ -71,3 +71,7 @@ We use a centralized error handling middleware to catch and handle errors across
 Middleware is defined in /src/middleware/errorMiddleware.js and registered in app.js.
 
 🧪 Pro tip: Validate early, crash never.
+
+## Docker
+1. Dockerized the app.
+2. Wrote Dockerfile, .dockerignore and docker-compose.yml
