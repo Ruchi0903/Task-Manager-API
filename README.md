@@ -43,3 +43,27 @@ c. GET /api/auth/me
 3. updateTask: update task (by logged-in user only) -> /api/tasks/:id
 4. deleteTask: delete task (by logged-in user only) -> /api/tasks/:id
 5. All task routes are protected via JWT.
+
+## Validation:
+Input validation is handled using Joi. This ensures that incoming data to our API meets the expected format before it hits the database.
+
+Validation applies to:
+
+1. POST /api/auth/register — Validates username, email, password
+2. POST /api/auth/login — Validates email, password
+3. POST /api/tasks — Validates title (required), optional description/status
+4. PUT /api/tasks/:id — All fields optional, but validated if present
+
+All schemas are defined in /src/validators and used inside controller files.
+
+## Error Handling:
+We use a centralized error handling middleware to catch and handle errors across the app. This helps return consistent error responses and avoids repeating try/catch logic everywhere.
+
+# Features:
+1. Catches all next(err) calls in controllers
+2. Returns JSON error response with status code and message
+3. Hides stack trace in production for security
+
+Middleware is defined in /src/middleware/errorMiddleware.js and registered in app.js.
+
+🧪 Pro tip: Validate early, crash never.

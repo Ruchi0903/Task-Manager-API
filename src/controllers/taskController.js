@@ -1,7 +1,13 @@
 import Task from '../models/taskModel.js';
+import { createTaskSchema, updateTaskSchema } from '../validators/taskValidation.js';
 
 export const createTask = async (req, res) => {
     try {
+        const { error } = createTaskSchema.validate(req.body);
+        if (error) {
+            return res.status(400).json({ message: error.details[0].message });
+        }
+
         const { title, description, status } = req.body;
 
         if (!title) {
@@ -17,8 +23,7 @@ export const createTask = async (req, res) => {
 
         res.status(201).json(task);
     } catch (error) {
-        console.error('Error creating task: ', error);
-        res.status(500).json({ message: 'Server error' });
+        next(err);
     }
 };
 
@@ -28,8 +33,7 @@ export const getTasks = async (req, res) => {
         const tasks = await Task.find({ user: req.user._id });
         res.status(200).json(tasks);
     } catch (error) {
-        console.error('Error fetching tasks:', error);
-        res.status(500).json({ message: 'Server error' });
+        next(err);
     }
 };
 
@@ -37,6 +41,11 @@ export const getTasks = async (req, res) => {
 // Update a task (only if owned by user)
 export const updateTask = async (req, res) => {
     try {
+        const { error } = updateTaskSchema.validate(req.body);
+        if (error) {
+            return res.status(400).json({ message: error.details[0].message });
+        }
+
         const taskId = req.params.id;
         const task = await Task.findById(taskId);
 
@@ -58,8 +67,7 @@ export const updateTask = async (req, res) => {
         const updatedTask = await task.save();
         res.status(200).json(updatedTask);
     } catch (error) {
-        console.error('Error updating task:', error);
-        res.status(500).json({ message: 'Server error' });
+        next(err);
     }
 };
 
@@ -81,7 +89,6 @@ export const deleteTask = async (req, res) => {
         await task.deleteOne();
         res.status(200).json({ message: 'Task removed' });
     } catch (error) {
-        console.error('Error deleting task:', error);
-        res.status(500).json({ message: 'Server error' });
+        next(err);
     }
 };

@@ -1,9 +1,15 @@
 import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
+import { registerSchema, loginSchema } from '../validators/authValidation.js';
 
 // REGISTER
 export const registerUser = async (req, res, next) => {
     try {
+        const { error } = registerSchema.validate(req.body);
+        if (error) {
+            return res.status(400).json({ message: error.details[0].message });
+        }
+
         const { username, email, password } = req.body;
 
         const userExists = await User.findOne({ email });
@@ -25,6 +31,11 @@ export const registerUser = async (req, res, next) => {
 // LOGIN
 export const loginUser = async (req, res, next) => {
     try {
+        const { error } = loginSchema.validate(req.body);
+        if (error) {
+            return res.status(400).json({ message: error.details[0].message });
+        }
+
         const { email, password } = req.body;
 
         const user = await User.findOne({ email });
@@ -57,7 +68,8 @@ export const getMe = async (req, res, next) => {
             // add more fields if needed
         });
     } catch (error) {
-        console.error('Error fetching user profile:', error);
-        res.status(500).json({ message: 'Server error' });
+        next(err);
+        // console.error('Error fetching user profile:', error);
+        // res.status(500).json({ message: 'Server error' });
     }
 };
