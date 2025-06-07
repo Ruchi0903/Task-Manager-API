@@ -1,7 +1,7 @@
 import Task from '../models/taskModel.js';
 import { createTaskSchema, updateTaskSchema } from '../validators/taskValidation.js';
 
-export const createTask = async (req, res) => {
+export const createTask = async (req, res, next) => {
     try {
         const { error } = createTaskSchema.validate(req.body);
         if (error) {
@@ -22,24 +22,24 @@ export const createTask = async (req, res) => {
         });
 
         res.status(201).json(task);
-    } catch (error) {
+    } catch (err) {
         next(err);
     }
 };
 
 // Get all tasks for logged-in user
-export const getTasks = async (req, res) => {
+export const getTasks = async (req, res, next) => {
     try {
         const tasks = await Task.find({ user: req.user._id });
         res.status(200).json(tasks);
-    } catch (error) {
+    } catch (err) {
         next(err);
     }
 };
 
 
 // Update a task (only if owned by user)
-export const updateTask = async (req, res) => {
+export const updateTask = async (req, res, next) => {
     try {
         const { error } = updateTaskSchema.validate(req.body);
         if (error) {
@@ -64,15 +64,20 @@ export const updateTask = async (req, res) => {
         if (description !== undefined) task.description = description;
         if (status !== undefined) task.status = status;
 
+console.log('task.user:', task?.user);
+console.log('req.user._id:', req.user?._id);
+
         const updatedTask = await task.save();
         res.status(200).json(updatedTask);
-    } catch (error) {
+
+    } catch (err) {
+        console.error('ERROR:', err); // Add this line
         next(err);
     }
 };
 
 // Delete a task (only if owned by user)
-export const deleteTask = async (req, res) => {
+export const deleteTask = async (req, res, next) => {
     try {
         const taskId = req.params.id;
         const task = await Task.findById(taskId);
@@ -85,10 +90,15 @@ export const deleteTask = async (req, res) => {
         if (task.user.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: 'Not authorized to delete this task' });
         }
+console.log('task.user:', task?.user);
+console.log('req.user._id:', req.user?._id);
 
         await task.deleteOne();
         res.status(200).json({ message: 'Task removed' });
-    } catch (error) {
+
+        
+    } catch (err) {
+        console.error('ERROR:', err); // Add this line
         next(err);
     }
 };

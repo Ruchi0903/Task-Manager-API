@@ -1,77 +1,111 @@
-Status till 6th June 2025, 23:45pm ->
+🧠 Task Manager API – Backend (Phase 1)
+Status: ✅ Completed Phase 1 as of 6th June 2025, 11:45 PM IST
+Docker ✅ | Tests ✅ | Insomnia ✅ | Git-ready ✅
 
-# Base Setup:
-1. Project initialized with Git + NPM
-2. Installed core backend dependencies (Express, Mongoose, etc.)
-3. Created structured folder layout
-4. Connected MongoDB with connectDB()
-5. Created base server with Express
-6. Configured environment variables with .env
+🏗️ Project Overview
+A fully functional Task Manager REST API built using Node.js, Express, and MongoDB with:
 
-# Models (Data Layer):
-1. userModel.js:
-a. Fields: name, email, password
-b. Password hashing with bcryptjs
-c. matchPassword() method for login
-2. taskModel.js:
-a. Fields: title, description, completed, user
-b. user is a foreign key via mongoose.Schema.Types.ObjectId
+JWT-based authentication
 
-# Core Features Built:
-1. Auth System (JWT based):
-a. registerUser: POST /api/auth/register
-b. loginUser: POST /api/auth/login
-c. generateToken.js: signs JWT
-d. Password hashing & comparison handled
-e. Token returned on successful login/registration
-f. Get the profile of logged-in user: GET /api/auth/me
-g. Delete the account of a logged-in user along with his/her tasks: DELETE /api/auth/delete
+User-task authorization
 
-(Optional) “Future feature: soft delete with account reactivation option”
+Robust validation & error handling
 
-2. Auth Routes
-a. POST /api/auth/register
-b. POST /api/auth/login
-c. GET /api/auth/me
-d. DELETE /api/auth/delete
+Dockerized deployment
 
-# Authorization Middleare
-1. authMiddleware.js created
-2. Validates JWT
-3. Extracts & attaches req.user to requests
-4. All /api/tasks routes are now protected
+Unit & integration testing using Jest + Supertest
 
-# Task CRUD Features:
-1. createTask: create tasks (by logged-in user only) -> /api/tasks/createTask
-2. getTasks: get user's tasks (by logged-in user only) -> /api/tasks/getTasks
-3. updateTask: update task (by logged-in user only) -> /api/tasks/:id
-4. deleteTask: delete task (by logged-in user only) -> /api/tasks/:id
-5. All task routes are protected via JWT.
+📁 Project Setup
+Initialized with git and npm
 
-## Validation:
-Input validation is handled using Joi. This ensures that incoming data to our API meets the expected format before it hits the database.
+Installed core dependencies: express, mongoose, bcryptjs, jsonwebtoken, dotenv, joi, etc.
 
-Validation applies to:
+Created clean project structure under /src
 
-1. POST /api/auth/register — Validates username, email, password
-2. POST /api/auth/login — Validates email, password
-3. POST /api/tasks — Validates title (required), optional description/status
-4. PUT /api/tasks/:id — All fields optional, but validated if present
+Configured environment variables via .env
 
-All schemas are defined in /src/validators and used inside controller files.
+MongoDB connection setup using connectDB()
 
-## Error Handling:
-We use a centralized error handling middleware to catch and handle errors across the app. This helps return consistent error responses and avoids repeating try/catch logic everywhere.
+Base Express server running on desired port
 
-# Features:
-1. Catches all next(err) calls in controllers
-2. Returns JSON error response with status code and message
-3. Hides stack trace in production for security
+👥 User Model
+Fields: username, email, password
 
-Middleware is defined in /src/middleware/errorMiddleware.js and registered in app.js.
+Password hashing using bcryptjs
 
-🧪 Pro tip: Validate early, crash never.
+Includes matchPassword() for login validation
 
-## Docker
-1. Dockerized the app.
-2. Wrote Dockerfile, .dockerignore and docker-compose.yml
+✅ Task Model
+Fields: title, description, completed, user
+
+user is a reference to User (via mongoose.Schema.Types.ObjectId)
+
+🔐 Authentication & Authorization
+🔑 Auth Routes:
+POST /api/auth/register – Register new user
+
+POST /api/auth/login – Authenticate user & return JWT
+
+GET /api/auth/me – Get current user’s profile
+
+DELETE /api/auth/delete – Delete user & all tasks
+
+🛡️ JWT Auth Middleware
+Parses and verifies token
+
+Attaches req.user to protected routes
+
+Protects all /api/tasks endpoints
+
+📝 Task Management (CRUD)
+All routes are protected and user-specific.
+
+POST /api/tasks/createTask – Create task
+
+GET /api/tasks/getTasks – Fetch all tasks
+
+PUT /api/tasks/:id – Update a task
+
+DELETE /api/tasks/:id – Delete a task
+
+📏 Input Validation (Joi)
+Used across all critical routes:
+
+Endpoint	Validates
+POST /api/auth/register	username, email, password
+POST /api/auth/login	email, password
+POST /api/tasks/createTask	title (required), description, completed
+PUT /api/tasks/:id	Optional fields if present
+
+All validation schemas are defined in /src/validators/ and applied in controllers.
+
+🧼 Error Handling
+Centralized error handler middleware ensures:
+
+Catch-all for next(err) in controllers
+
+Consistent JSON error responses
+
+Hides stack traces in production
+
+Logic lives in /src/middleware/errorMiddleware.js
+
+🐳 Docker Support
+Wrote production-ready Dockerfile
+
+.dockerignore to reduce build context size
+
+docker-compose.yml to spin up API with MongoDB easily
+
+🧪 Testing
+Unit + integration tests written using Jest & Supertest
+
+Tests cover:
+
+Auth flows (register/login/me/delete)
+
+Task CRUD operations
+
+Run via npm test
+
+All tests are passing ✅
